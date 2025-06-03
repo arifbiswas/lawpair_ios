@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {
+  ActivityIndicator,
   Alert,
   Pressable,
   Text,
@@ -67,7 +68,7 @@ const Login = () => {
           navigation.navigate('bottomroutes');
         }
       } catch (error) {
-        console.log('Error reading user info:', error);
+        console.log('Warning! reading user info:', error);
       }
     };
 
@@ -109,7 +110,7 @@ const Login = () => {
         }
         navigation.navigate(attorney ? 'attorneybottomroutes' : 'bottomroutes');
       } else {
-        Alert.alert('Error', response.message);
+        Alert.alert('Warning!', response.message);
       }
     } catch (err) {
       console.error('Login failed:', err);
@@ -212,7 +213,12 @@ const Login = () => {
             <Text style={tw`text-[#E7E7E9] text-[16px] font-bold pr-1`}>
               Sign in
             </Text>
-            <SvgXml xml={LoginIcon} />
+
+            {isLoading ? (
+              <ActivityIndicator color="white" size="small" />
+            ) : (
+              <SvgXml xml={LoginIcon} />
+            )}
           </View>
         </TouchableOpacity>
 
