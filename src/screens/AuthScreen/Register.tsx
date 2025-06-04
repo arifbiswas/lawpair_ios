@@ -1,6 +1,13 @@
 import React, {useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
-import {Alert, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {EyeIcon, EyeOffIcon} from '../../assets/Icons';
 
 import {useNavigation} from '@react-navigation/native';
@@ -70,206 +77,209 @@ const Register: React.FC = () => {
 
   return (
     <View style={tw`flex-1 bg-white`}>
-      <Header
-        isbackbutton={false}
-        title="Sign up to create a new account..."
-        subtitle="Enter correct information for sign in to your LawPair account"
-      />
-
-      <View style={tw`px-4`}>
-        {/* User Type Selector */}
-        <View
-          style={tw`flex-row justify-between border-b-2 border-gray-300 mb-5`}>
-          <TouchableOpacity
-            style={tw`flex-1 items-center py-3 ${
-              userType === 'user' ? 'border-b-4 border-blue-500' : ''
-            }`}
-            onPress={() => setUserType('user')}>
-            <Text
-              style={tw`text-lg ${
-                userType === 'user'
-                  ? 'text-blue-500 font-bold'
-                  : 'text-gray-500'
-              }`}>
-              I'm a user
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={tw`flex-1 items-center py-3 ${
-              userType === 'lawyer' ? 'border-b-4 border-blue-500' : ''
-            }`}
-            onPress={() => setUserType('lawyer')}>
-            <Text
-              style={tw`text-lg ${
-                userType === 'lawyer'
-                  ? 'text-blue-500 font-bold'
-                  : 'text-gray-500'
-              }`}>
-              I'm an attorney
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Input Fields with Validation */}
-        <Controller
-          control={control}
-          name="firstName"
-          rules={{required: 'First name is required'}}
-          render={({field: {onChange, value}}) => (
-            <>
-              <TextInput
-                style={tw`h-12 border border-gray-300 rounded px-4 bg-gray-100 mb-2`}
-                placeholder="First name"
-                value={value}
-                onChangeText={onChange}
-              />
-              {errors.firstName && (
-                <Text style={tw`text-red-500`}>{errors.firstName.message}</Text>
-              )}
-            </>
-          )}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Header
+          isbackbutton={false}
+          title="Sign up to create a new account..."
+          subtitle="Enter correct information for sign in to your LawPair account"
         />
 
-        <Controller
-          control={control}
-          name="lastName"
-          rules={{required: 'Last name is required'}}
-          render={({field: {onChange, value}}) => (
-            <>
-              <TextInput
-                style={tw`h-12 border border-gray-300 rounded px-4 bg-gray-100 mb-2`}
-                placeholder="Last name"
-                value={value}
-                onChangeText={onChange}
-              />
-              {errors.lastName && (
-                <Text style={tw`text-red-500`}>{errors.lastName.message}</Text>
-              )}
-            </>
-          )}
-        />
+        <View style={tw`px-4`}>
+          {/* User Type Selector */}
+          <View
+            style={tw`flex-row justify-between border-b-2 border-gray-300 mb-5`}>
+            <TouchableOpacity
+              style={tw`flex-1 items-center py-3 ${
+                userType === 'user' ? 'border-b-4 border-blue-500' : ''
+              }`}
+              onPress={() => setUserType('user')}>
+              <Text
+                style={tw`text-lg ${
+                  userType === 'user'
+                    ? 'text-blue-500 font-bold'
+                    : 'text-gray-500'
+                }`}>
+                I'm a user
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={tw`flex-1 items-center py-3 ${
+                userType === 'lawyer' ? 'border-b-4 border-blue-500' : ''
+              }`}
+              onPress={() => setUserType('lawyer')}>
+              <Text
+                style={tw`text-lg ${
+                  userType === 'lawyer'
+                    ? 'text-blue-500 font-bold'
+                    : 'text-gray-500'
+                }`}>
+                I'm an attorney
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-        <Controller
-          control={control}
-          name="email"
-          rules={{
-            required: 'Email is required',
-            pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-              message: 'Enter a valid email address',
-            },
-          }}
-          render={({field: {onChange, value}}) => (
-            <>
-              <TextInput
-                style={tw`h-12 border border-gray-300 rounded px-4 bg-gray-100 mb-2`}
-                placeholder="Email"
-                keyboardType="email-address"
-                value={value}
-                onChangeText={onChange}
-              />
-              {errors.email && (
-                <Text style={tw`text-red-500`}>{errors.email.message}</Text>
-              )}
-            </>
-          )}
-        />
-
-        {/* Password Field */}
-        <Controller
-          control={control}
-          name="password"
-          rules={{
-            required: 'Password is required',
-            minLength: {
-              value: 6,
-              message: 'Password must be at least 6 characters',
-            },
-          }}
-          render={({field: {onChange, value}}) => (
-            <>
-              <View style={tw`relative`}>
+          {/* Input Fields with Validation */}
+          <Controller
+            control={control}
+            name="firstName"
+            rules={{required: 'First name is required'}}
+            render={({field: {onChange, value}}) => (
+              <>
                 <TextInput
-                  style={tw`h-12 border border-gray-300 rounded px-4 bg-gray-100 mb-2 pr-10`}
-                  placeholder="Create password"
-                  secureTextEntry={!passwordVisible}
+                  style={tw`h-12 border border-gray-300 rounded px-4 bg-gray-100 mb-2`}
+                  placeholder="First name"
                   value={value}
                   onChangeText={onChange}
                 />
-                <TouchableOpacity
-                  style={tw`absolute right-4 top-3`}
-                  onPress={() => setPasswordVisible(!passwordVisible)}>
-                  <SvgXml
-                    xml={passwordVisible ? EyeOffIcon : EyeIcon}
-                    width={20}
-                    height={20}
-                  />
-                </TouchableOpacity>
-              </View>
-              {errors.password && (
-                <Text style={tw`text-red-500`}>{errors.password.message}</Text>
-              )}
-            </>
-          )}
-        />
+                {errors.firstName && (
+                  <Text style={tw`text-red`}>{errors.firstName.message}</Text>
+                )}
+              </>
+            )}
+          />
 
-        {/* Confirm Password Field */}
-        <Controller
-          control={control}
-          name="confirmPassword"
-          rules={{
-            required: 'Confirm password is required',
-            validate: value => value === password || 'Passwords do not match',
-          }}
-          render={({field: {onChange, value}}) => (
-            <>
-              <View style={tw`relative`}>
+          <Controller
+            control={control}
+            name="lastName"
+            rules={{required: 'Last name is required'}}
+            render={({field: {onChange, value}}) => (
+              <>
                 <TextInput
-                  style={tw`h-12 border border-gray-300 rounded px-4 bg-gray-100 mb-2 pr-10`}
-                  placeholder="Confirm password"
-                  secureTextEntry={!confirmPasswordVisible}
+                  style={tw`h-12 border border-gray-300 rounded px-4 bg-gray-100 mb-2`}
+                  placeholder="Last name"
                   value={value}
                   onChangeText={onChange}
                 />
-                <TouchableOpacity
-                  style={tw`absolute right-4 top-3`}
-                  onPress={() =>
-                    setConfirmPasswordVisible(!confirmPasswordVisible)
-                  }>
-                  <SvgXml
-                    xml={confirmPasswordVisible ? EyeOffIcon : EyeIcon}
-                    width={20}
-                    height={20}
-                  />
-                </TouchableOpacity>
-              </View>
-              {errors.confirmPassword && (
-                <Text style={tw`text-red-500`}>
-                  {errors.confirmPassword.message}
-                </Text>
-              )}
-            </>
-          )}
-        />
+                {errors.lastName && (
+                  <Text style={tw`text-red`}>{errors.lastName.message}</Text>
+                )}
+              </>
+            )}
+          />
 
-        <TouchableOpacity
-          style={tw`bg-primary h-11 rounded mt-3 items-center justify-center`}
-          onPress={handleSubmit(onSubmit)}>
-          <Text style={tw`text-white text-[16px] font-bold`}>
-            {isLoading ? 'Loading...' : 'Create account'}
-          </Text>
-        </TouchableOpacity>
-        <View style={tw`flex-row items-center justify-center pt-11`}>
-          <Text style={tw`text-[#41414D] text-sm font-semibold`}>
-            You have an account?
-          </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
-            <Text style={tw`text-[#4B8FCB] text-sm font-semibold pl-1`}>
-              Sign In
+          <Controller
+            control={control}
+            name="email"
+            rules={{
+              required: 'Email is required',
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                message: 'Enter a valid email address',
+              },
+            }}
+            render={({field: {onChange, value}}) => (
+              <>
+                <TextInput
+                  style={tw`h-12 border border-gray-300 rounded px-4 bg-gray-100 mb-2`}
+                  placeholder="Email"
+                  keyboardType="email-address"
+                  value={value}
+                  onChangeText={onChange}
+                />
+                {errors.email && (
+                  <Text style={tw`text-red`}>{errors.email.message}</Text>
+                )}
+              </>
+            )}
+          />
+
+          {/* Password Field */}
+          <Controller
+            control={control}
+            name="password"
+            rules={{
+              required: 'Password is required',
+              minLength: {
+                value: 6,
+                message: 'Password must be at least 6 characters',
+              },
+            }}
+            render={({field: {onChange, value}}) => (
+              <>
+                <View style={tw`relative`}>
+                  <TextInput
+                    style={tw`h-12 border border-gray-300 rounded px-4 bg-gray-100 mb-2 pr-10`}
+                    placeholder="Create password"
+                    secureTextEntry={!passwordVisible}
+                    value={value}
+                    onChangeText={onChange}
+                  />
+                  <TouchableOpacity
+                    style={tw`absolute right-4 top-3`}
+                    onPress={() => setPasswordVisible(!passwordVisible)}>
+                    <SvgXml
+                      xml={passwordVisible ? EyeOffIcon : EyeIcon}
+                      width={20}
+                      height={20}
+                    />
+                  </TouchableOpacity>
+                </View>
+                {errors.password && (
+                  <Text style={tw`text-red`}>{errors.password.message}</Text>
+                )}
+              </>
+            )}
+          />
+
+          {/* Confirm Password Field */}
+          <Controller
+            control={control}
+            name="confirmPassword"
+            rules={{
+              required: 'Confirm password is required',
+              validate: value => value === password || 'Passwords do not match',
+            }}
+            render={({field: {onChange, value}}) => (
+              <>
+                <View style={tw`relative`}>
+                  <TextInput
+                    style={tw`h-12 border border-gray-300 rounded px-4 bg-gray-100 mb-2 pr-10`}
+                    placeholder="Confirm password"
+                    secureTextEntry={!confirmPasswordVisible}
+                    value={value}
+                    onChangeText={onChange}
+                  />
+                  <TouchableOpacity
+                    style={tw`absolute right-4 top-3`}
+                    onPress={() =>
+                      setConfirmPasswordVisible(!confirmPasswordVisible)
+                    }>
+                    <SvgXml
+                      xml={confirmPasswordVisible ? EyeOffIcon : EyeIcon}
+                      width={20}
+                      height={20}
+                    />
+                  </TouchableOpacity>
+                </View>
+                {errors.confirmPassword && (
+                  <Text style={tw`text-red`}>
+                    {errors.confirmPassword.message}
+                  </Text>
+                )}
+              </>
+            )}
+          />
+
+          <TouchableOpacity
+            style={tw`bg-primary h-11 rounded mt-3 items-center justify-center`}
+            onPress={handleSubmit(onSubmit)}>
+            <Text style={tw`text-white text-[16px] font-bold`}>
+              {isLoading ? 'Loading...' : 'Create account'}
             </Text>
           </TouchableOpacity>
+          <View style={tw`flex-row items-center justify-center pt-11`}>
+            <Text style={tw`text-[#41414D] text-sm font-semibold`}>
+              You have an account?
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('LoginScreen')}>
+              <Text style={tw`text-[#4B8FCB] text-sm font-semibold pl-1`}>
+                Sign In
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };

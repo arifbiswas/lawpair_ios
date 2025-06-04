@@ -1,7 +1,9 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {SafeAreaView} from 'react-native';
 import Sidebar from '../components/Sidebar';
+import tw from '../lib/tailwind';
 import AttorneyProfile from '../screens/Attorneyscreen/AttorneyProfile';
 import AvailavleAttorneys from '../screens/Attorneyscreen/AvailavleAttorneys';
 import CreateyourOwnprofile from '../screens/Attorneyscreen/CreateyourOwnprofile';
@@ -65,16 +67,18 @@ const AuthStack = () => (
 // 👉 Drawer Navigator (Sidebar on front-layer)
 const AppRoutes = () => {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        drawerContent={props => <Sidebar {...props} />}
-        screenOptions={{
-          headerShown: false,
-          drawerType: 'front',
-        }}>
-        <Drawer.Screen name="Main" component={AuthStack} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <SafeAreaView style={tw`flex-1`}>
+      <NavigationContainer>
+        <Drawer.Navigator
+          drawerContent={props => <Sidebar {...props} />}
+          screenOptions={{
+            headerShown: false,
+            drawerType: 'front',
+          }}>
+          <Drawer.Screen name="Main" component={AuthStack} />
+        </Drawer.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
   );
 };
 

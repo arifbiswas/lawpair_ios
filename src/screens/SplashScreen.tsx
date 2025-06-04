@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import Animated, {FadeIn, FadeOut, runOnJS} from 'react-native-reanimated';
 
 import {useNavigation} from '@react-navigation/native';
@@ -32,7 +32,9 @@ const SplashScreen = () => {
         />
       </Animated.View>
     </SafeAreaView>
-  ) : null;
+  ) : (
+    <View></View>
+  );
 };
 
 export default SplashScreen;
