@@ -1,29 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
-import { menuitem } from '../assets/Icons';
-import { SvgXml } from 'react-native-svg';
-import tw from '../lib/tailwind';
-import { useAuthUser } from '../lib/AuthProvider';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SvgXml} from 'react-native-svg';
+import {menuitem} from '../assets/Icons';
+import {useAuthUser} from '../lib/AuthProvider';
+import tw from '../lib/tailwind';
+
+interface MainScreenHeaderProps {
+  ofuser?: boolean;
+}
 // Define types for your navigation parameters
 type RootStackParamList = {
-  attornyProfile: { id: string };
-  Profile: { id: string };
+  attornyProfile: {id: string};
+  Profile: {id: string};
   // Add other screens here as needed
 };
 
 // Extend the navigation type with your specific screens
 type NavigationProps = {
-  navigate: (screen: keyof RootStackParamList, params?: RootStackParamList[keyof RootStackParamList]) => void;
+  navigate: (
+    screen: keyof RootStackParamList,
+    params?: RootStackParamList[keyof RootStackParamList],
+  ) => void;
   dispatch: (action: any) => void;
 };
 
-const MainScreenHeader: React.FC = () => {
+const MainScreenHeader: React.FC = ({ofuser}: MainScreenHeaderProps) => {
   const navigation = useNavigation<NavigationProps>();
   const [attorney, setAttorney] = useState<boolean>(false);
-  const { user } = useAuthUser();
+  const {user} = useAuthUser();
   const [userinfo, setUserinfo] = useState<string>('');
   useEffect(() => {
     const checkLoggedInUser = async () => {
@@ -31,14 +38,12 @@ const MainScreenHeader: React.FC = () => {
         const userInfo = await AsyncStorage.getItem('user');
         const parsedUser = userInfo ? JSON.parse(userInfo) : null;
 
-        console.log('user+++++++++++++++++++', parsedUser);
         setUserinfo(parsedUser);
         if (parsedUser?.role === 'lawyer') {
           setAttorney(true);
         }
-
       } catch (error) {
-        console.log("Error reading user info:", error);
+        console.log('Error reading user info:', error);
       }
     };
 
@@ -47,9 +52,9 @@ const MainScreenHeader: React.FC = () => {
 
   const handleProfilePress = () => {
     if (!user?.id) return;
-
-    const screenName = attorney ? 'atonomyProfile' : 'Profile';
-    navigation.navigate(screenName, { id: user.id });
+    navigation?.navigate(attorney ? 'attornyProfile' : 'Profile', {
+      id: user.id,
+    });
   };
 
   return (
@@ -63,7 +68,7 @@ const MainScreenHeader: React.FC = () => {
       {/* Sidebar Toggle Button */}
       <TouchableOpacity
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-        <Text style={{ fontSize: 24 }}>
+        <Text style={{fontSize: 24}}>
           <SvgXml xml={menuitem} />
         </Text>
       </TouchableOpacity>
@@ -85,18 +90,21 @@ const MainScreenHeader: React.FC = () => {
       </View>
 
       {/* User Info */}
-      <TouchableOpacity
-        onPress={handleProfilePress}
-        style={{
-          marginLeft: 'auto',
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        <Image
-          source={{ uri: userinfo?.avatar }}
-          style={{ width: 40, height: 40, borderRadius: 100 }}
-        />
-      </TouchableOpacity>
+
+      {!ofuser && (
+        <TouchableOpacity
+          onPress={handleProfilePress}
+          style={{
+            marginLeft: 'auto',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={{uri: userinfo?.avatar}}
+            style={{width: 40, height: 40, borderRadius: 100}}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

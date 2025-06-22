@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   Dimensions,
@@ -12,19 +12,19 @@ import {
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {DrawerContentScrollView} from '@react-navigation/drawer';
-import {useNavigation} from '@react-navigation/native';
-import {SvgXml} from 'react-native-svg';
-import {LogoutIcon} from '../assets/Icons';
+import { DrawerContentScrollView } from '@react-navigation/drawer';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
+import { SvgXml } from 'react-native-svg';
+import { LogoutIcon } from '../assets/Icons';
 import logo from '../assets/images/Logo.png';
-import {useAuthUser} from '../lib/AuthProvider';
+import { useAuthUser } from '../lib/AuthProvider';
 import tw from '../lib/tailwind';
 
 const Sidebar: React.FC = () => {
-  const {user} = useAuthUser();
-
+  const { user } = useAuthUser();
+  console.log('user', user?.role);
   const navigation = useNavigation<any>();
-  const {height} = Dimensions.get('window');
+  const { height } = Dimensions.get('window');
   const adjustedHeight = height - 250;
 
   const [modalVisible, setModalVisible] = useState(false); // Modal visibility state
@@ -43,7 +43,7 @@ const Sidebar: React.FC = () => {
         setModalVisible(false); // Close modal after delete
         navigation.reset({
           index: 0,
-          routes: [{name: 'LoginScreen'}],
+          routes: [{ name: 'LoginScreen' }],
         });
       } catch (error) {
         console.log('Error deleting profile:', error);
@@ -53,6 +53,7 @@ const Sidebar: React.FC = () => {
       Alert.alert('Error', 'Please enter your password.');
     }
   };
+
 
   const handleLogout = () => {
     Alert.alert('Logout', 'Are you sure you want to logout?', [
@@ -65,16 +66,20 @@ const Sidebar: React.FC = () => {
         style: 'destructive',
         onPress: async () => {
           try {
+            // Close the drawer first
+            navigation.dispatch(DrawerActions.closeDrawer());
+
             // Remove both token and user data
             await AsyncStorage.multiRemove(['token', 'user']);
+
             // Reset navigation stack and navigate to LoginScreen
             navigation.reset({
               index: 0,
-              routes: [{name: 'LoginScreen'}],
+              routes: [{ name: 'LoginScreen' }],
             });
           } catch (error) {
             console.log('Error during logout:', error);
-            Alert.alert('Error', 'Failed to logout. Please try again.');
+            Alert.alert('Warning', 'Failed to logout. Please try again.');
           }
         },
       },
@@ -86,6 +91,7 @@ const Sidebar: React.FC = () => {
     'Legal resources',
     'Disclaimers',
     'Favorite list',
+
   ];
   const LawyerItems = [
     'About us',
@@ -98,7 +104,7 @@ const Sidebar: React.FC = () => {
   return (
     <SafeAreaView style={tw`flex-1 pb-4`}>
       <DrawerContentScrollView
-        contentContainerStyle={{flex: 1, padding: 20, paddingBottom: 100}}>
+        contentContainerStyle={{ flex: 1, padding: 20, paddingBottom: 100 }}>
         <View>
           <Image
             source={logo}
@@ -107,29 +113,30 @@ const Sidebar: React.FC = () => {
           />
           {/* Navigation Links */}
           <View style={tw`mt-8 pl-4`}>
-            {LawyerItems.map((item, index) => (
+
+            {(user?.role === 'user' ? userItems : LawyerItems).map((item, index) => (
               <Text
                 style={tw`text-[#41414D] text-[16px] font-bold  mb-4 rounded-lg`}
                 key={index}
                 onPress={() => {
                   const screenName =
                     item === 'Update password' ||
-                    item === 'Update personal information'
+                      item === 'Update personal information'
                       ? 'editprofile'
                       : item;
 
-                  navigation.navigate(screenName, {title: item});
+                  navigation.navigate(screenName, { title: item });
                 }}
-                // Modify to correct screen
+              // Modify to correct screen
               >
                 {item}
               </Text>
             ))}
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
+            {/* <TouchableOpacity onPress={() => setModalVisible(true)}>
               <Text style={tw`text-red text-[16px] font-bold mb-4 rounded-lg`}>
                 Delete your profile
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
