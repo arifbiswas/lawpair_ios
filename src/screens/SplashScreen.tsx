@@ -21,7 +21,7 @@ const SplashScreen = () => {
             ? 'AttorneyBottomRoutes'
             : 'bottomroutes';
 
-        console.log(parsedUser, 'parsedUser');
+        // console.log(parsedUser, 'parsedUser');
         (navigation as any)?.replace(routePath);
       } else {
         (navigation as any)?.replace('LoginScreen');
