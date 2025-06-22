@@ -1,30 +1,47 @@
-import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
-import Animated, {FadeIn, FadeOut, runOnJS} from 'react-native-reanimated';
+import {Image, StyleSheet} from 'react-native';
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
+import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 const SplashScreen = () => {
   const navigation = useNavigation();
-  const [isVisible, setIsVisible] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 2000);
+  // console.log(user);
 
-    return () => clearTimeout(timer); // Cleanup on unmount
-  }, []);
+  const fetchUserFromStorage = async () => {
+    try {
+      const userInfo = await AsyncStorage.getItem('user');
+      const parsedUser = await JSON.parse(userInfo);
+      if (parsedUser?.id) {
+        const routePath =
+          parsedUser?.role === 'lawyer'
+            ? 'AttorneyBottomRoutes'
+            : 'bottomroutes';
 
-  return isVisible ? (
+        console.log(parsedUser, 'parsedUser');
+        (navigation as any)?.replace(routePath);
+      } else {
+        (navigation as any)?.replace('LoginScreen');
+      }
+    } catch (error) {
+      console.log('Error fetching user from AsyncStorage:', error);
+    }
+  };
+
+  setTimeout(() => {
+    // navigation.replace(routePath);
+    fetchUserFromStorage();
+  }, 1000);
+
+  return (
     <SafeAreaView style={styles.safeContainer}>
       <Animated.View
         style={styles.container}
         entering={FadeIn.duration(1000)}
-        exiting={FadeOut.duration(1000).withCallback(() =>
-          runOnJS(navigation.replace)('LoginScreen'),
-        )}>
+        exiting={FadeOut.duration(1000)}>
         <Image
           source={require('../assets/images/Logo.png')}
           style={styles.logo}
@@ -32,8 +49,6 @@ const SplashScreen = () => {
         />
       </Animated.View>
     </SafeAreaView>
-  ) : (
-    <View></View>
   );
 };
 
