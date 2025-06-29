@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Controller, useForm} from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import {
   ActivityIndicator,
   Alert,
@@ -19,13 +19,13 @@ import {
 } from '../../assets/Icons';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
-import {SvgXml} from 'react-native-svg';
-import {useDispatch} from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { SvgXml } from 'react-native-svg';
+import { useDispatch } from 'react-redux';
 import Header from '../../components/Header';
 import tw from '../../lib/tailwind';
-import {useLoginUserMutation} from '../../redux/features/users/UserApi';
-import {setUser} from '../../redux/features/users/userslice';
+import { useLoginUserMutation } from '../../redux/features/users/UserApi';
+import { setUser } from '../../redux/features/users/userslice';
 
 interface LoginProps {
   email: string;
@@ -39,19 +39,13 @@ const Login = () => {
   const [userrole, setUserrole] = useState<boolean>(false);
 
   // Redux API hook
-  const [loginUser, {isLoading, error}] = useLoginUserMutation();
+  const [loginUser, { isLoading, error }] = useLoginUserMutation();
 
   const {
     control,
     handleSubmit,
-
-    formState: {errors},
-  } = useForm<LoginProps>({
-    defaultValues: {
-      email: 'Arifbiswas1020@gmail.com',
-      password: '12345678',
-    },
-  });
+    formState: { errors },
+  } = useForm<LoginProps>();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
@@ -59,6 +53,7 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev);
   };
+
 
   useEffect(() => {
     const initialize = async () => {
@@ -145,12 +140,11 @@ const Login = () => {
                   //   message: 'Invalid email address',
                   // },
                 }}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <View style={tw`relative`}>
                     <TextInput
-                      style={tw`border p-2 h-[48px] text-[#41414D] rounded-md focus:border-2 border-[#4B8FCB] pl-10 ${
-                        errors.email ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      style={tw`border p-2 h-[48px] text-[#41414D] rounded-md focus:border-2 border-[#4B8FCB] pl-10 ${errors.email ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       placeholder="Enter your email"
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -175,16 +169,15 @@ const Login = () => {
               Password
             </Text>
             <View
-              style={tw`relative flex-row items-center border px-2 rounded-md ${
-                errors.password ? 'border-red-500' : 'border-gray-300'
-              }`}>
+              style={tw`relative flex-row items-center border px-2 rounded-md ${errors.password ? 'border-red-500' : 'border-gray-300'
+                }`}>
               <SvgXml xml={LockIcon} width={20} height={20} style={tw`mr-2`} />
 
               <Controller
                 control={control}
                 name="password"
-                rules={{required: 'Password is required'}}
-                render={({field: {onChange, onBlur, value}}) => (
+                rules={{ required: 'Password is required' }}
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={tw`flex-1 text-[#41414D] h-[48px]`}
                     placeholder="Enter your password"

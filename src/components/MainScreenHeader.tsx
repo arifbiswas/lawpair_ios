@@ -52,9 +52,9 @@ const MainScreenHeader: React.FC = ({ofuser}: MainScreenHeaderProps) => {
 
   const handleProfilePress = () => {
     if (!user?.id) return;
-    navigation?.navigate(attorney ? 'attornyProfile' : 'Profile', {
-      id: user.id,
-    });
+
+    const screenName = attorney ? 'atonomyProfile' : 'Profile';
+    navigation?.navigate(screenName, {id: user.id});
   };
 
   return (
